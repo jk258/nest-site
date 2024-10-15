@@ -1,10 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateSiteDto, UpdateSiteDto, IdDto } from './dto/site.dto'
 import { PrismaService } from '@/prisma/prisma.service';
+import { HttpService } from '@nestjs/axios';
+import * as cheerio from 'cheerio';
 
 @Injectable()
 export class SiteService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly httpService: HttpService,
+	) {}
 	async create(createSiteDto: CreateSiteDto) {
 		try {
 			const site = await this.prisma.site.findFirst({
@@ -54,8 +59,8 @@ export class SiteService {
 				},
 				data: {
 					title: siteDto.title,
-          url: siteDto.url,
-          logo:siteDto.logo,
+					url: siteDto.url,
+					logo: siteDto.logo,
 					tags: {
 						deleteMany: {},
 						create: siteDto.tags,
@@ -94,5 +99,18 @@ export class SiteService {
 		} catch (error) {
 			throw new BadRequestException(error)
 		}
+	}
+
+	async getSiteInfo(url: string) {
+		try {
+      const res = await this.httpService.axiosRef.get(url)
+      const $ = cheerio.load(res.data)
+      const title = $('title').text()
+      const description = $('meta[name="description"]').attr('content')
+      const logo = $('link[rel="shortcut icon"]').attr('href')
+      return {title,description,logo}
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
 	}
 }

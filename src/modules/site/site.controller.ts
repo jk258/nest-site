@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { SiteService } from './site.service';
-import { CreateSiteDto, IdDto, UpdateSiteDto } from './dto/site.dto'
+import { CreateSiteDto, IdDto, SiteUrl, UpdateSiteDto } from './dto/site.dto'
 
 @Controller('site')
 export class SiteController {
@@ -17,12 +17,16 @@ export class SiteController {
 	}
 
 	@Post('update')
-	update(@Body() updateSiteDto: UpdateSiteDto) {
-		return this.siteService.update(updateSiteDto)
+	async update(@Body() updateSiteDto: UpdateSiteDto) {
+		return await this.siteService.update(updateSiteDto)
 	}
 
 	@Post('delete')
-	remove(@Body() idDto: IdDto) {
-		return this.siteService.remove(idDto)
+	async remove(@Body() idDto: IdDto) {
+		return await this.siteService.remove(idDto)
+	}
+	@Get('info')
+	async getSiteInfo(@Query() query: SiteUrl) {
+		return await this.siteService.getSiteInfo(query.url)
 	}
 }
