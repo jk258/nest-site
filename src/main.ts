@@ -76,6 +76,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new CustomValidationPipe())
   app.useGlobalInterceptors(new TransformInterceptor());
+  
   app.useGlobalFilters(new AllExceptionsFilter());
   docs(app)
   await app.listen(3000);

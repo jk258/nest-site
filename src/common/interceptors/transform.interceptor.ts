@@ -2,6 +2,9 @@ import { CallHandler, ExecutionContext, NestInterceptor, Injectable, HttpStatus 
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
+/**
+ * 拦截器，统一返回格式
+ */
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

@@ -1,12 +1,26 @@
-import { ValidationPipe, ArgumentMetadata } from '@nestjs/common'
-import { BadRequestException } from '@nestjs/common';
-export class CustomValidationPipe extends ValidationPipe {
-  async transform(value: any, metadata: ArgumentMetadata) {
-    try {
-      return await super.transform(value, metadata);
-    } catch (error) {
-      // 这里可以自定义错误处理，例如将错误信息转换为更友好的格式
-      throw new BadRequestException(error.response.message[0], error.constraints)
+import { BadRequestException, ArgumentMetadata, PipeTransform } from '@nestjs/common'
+import { plainToClass } from 'class-transformer'
+import { validate } from 'class-validator'
+export class CustomValidationPipe implements PipeTransform {
+  async transform(value: any, { metatype }: ArgumentMetadata) {
+		if (!metatype || !this.toValidate(metatype)) {
+			return value
     }
-  }
+    for (const key in value) {
+      if (value[key]&&typeof value[key]==='string'&&/^[+-]?\d+(\.\d+)?$/.test(value[key])) {
+        value[key]=Number(value[key])
+      }
+    }
+		const object = plainToClass(metatype, value)
+		const errors = await validate(object)
+		if (errors.length > 0) {
+			throw new BadRequestException('Validation failed')
+		}
+		return value
+	}
+
+	private toValidate(metatype: Function): boolean {
+		const types: Function[] = [String, Boolean, Number, Array, Object]
+		return !types.includes(metatype)
+	}
 }

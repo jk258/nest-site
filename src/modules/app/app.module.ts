@@ -5,19 +5,25 @@ import { AppService } from './app.service'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from '@/modules/auth/auth.module'
+import { TagModule } from '@/modules/tag/tag.module'
+import { SiteModule } from '@/modules/site/site.module'
 
 @Module({
 	imports: [
-		ServeStaticModule.forRoot({
-			rootPath: join(__dirname, '../../../', 'client'),
+		// ServeStaticModule.forRoot({
+		// 	rootPath: join(__dirname, '../../../', 'client'),
+		// }),
+		ConfigModule.forRoot({
+			envFilePath: '.env',
+			isGlobal: true,
 		}),
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
-    }),
 		AuthModule,
+		TagModule,
+		SiteModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [
+		AppService,
+	],
 })
 export class AppModule {}
