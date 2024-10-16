@@ -4,9 +4,9 @@ import { GetTagList,TagCreate, GetSiteInfo} from '@/assets/api/index'
 //   console.log(res)
 // })
 // TagCreate({title:"工具"})
-GetSiteInfo({url:"http://www.baidu.com"}).then(res=>{
-  console.log(res)
-})
+// GetSiteInfo({url:"http://www.baidu.com"}).then(res=>{
+//   console.log(res)
+// })
 </script>
 
 <template>
