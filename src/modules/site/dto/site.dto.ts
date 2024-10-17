@@ -7,7 +7,7 @@ export class CreateSiteDto {
 	url: string
 	@IsNotEmpty({ message: 'logo不能为空' })
   logo: string
-  
+  desc:string
   tags: { tagId: number }[]
   
 }

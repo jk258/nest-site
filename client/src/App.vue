@@ -5,15 +5,12 @@ import { NConfigProvider,dateZhCN, zhCN } from 'naive-ui'
 
 <template>
 	<n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-		<nav>
-			<RouterLink to="/">Home</RouterLink>
-			<RouterLink to="/about">About</RouterLink>
-		</nav>
-		<RouterView />
+		<header class="h-24"></header>
+		<RouterView class="h-[calc(100vh-96px)]"/>
 	</n-config-provider>
 </template>
 
-<style scoped>
+<style>
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
