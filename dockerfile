@@ -23,7 +23,7 @@ COPY --from=build-stage /app/dist /app/dist
 Copy --from=build-stage /app/prisma /app/prisma
 COPY package*.json ./
 
-Copy --from=build-stage /app/client/dist /app/static
+COPY --from=build-stage /app/client/dist /app/static
 
 RUN npm config set registry https://registry.npmmirror.com/
 RUN npm install --production
