@@ -2,13 +2,16 @@ import { IsNotEmpty, IsNumber, IsUrl } from "class-validator"
 
 export class CreateSiteDto {
 	@IsNotEmpty({ message: '标题不能为空' })
-	title: string
+  title: string
+  
 	@IsNotEmpty({ message: '地址不能为空' })
-	url: string
+  url: string
+  
 	@IsNotEmpty({ message: 'logo不能为空' })
   logo: string
+  
   desc:string
-  tags: { tagId: number }[]
+  tags: string
   
 }
 export class IdDto {

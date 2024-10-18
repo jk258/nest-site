@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateSiteDto, UpdateSiteDto, IdDto } from './dto/site.dto'
-import { PrismaService } from '@/prisma/prisma.service';
-import { HttpService } from '@nestjs/axios';
-import * as cheerio from 'cheerio';
+import { PrismaService } from '@/prisma/prisma.service'
+import { HttpService } from '@nestjs/axios'
+import * as cheerio from 'cheerio'
 
 @Injectable()
 export class SiteService {
@@ -12,6 +12,11 @@ export class SiteService {
 	) {}
 	async create(createSiteDto: CreateSiteDto) {
 		try {
+			const tags = createSiteDto.tags.split(',').map((tag) => {
+				return {
+					tagId: Number(tag),
+				}
+			})
 			const site = await this.prisma.site.findFirst({
 				where: {
 					title: createSiteDto.title,
@@ -24,7 +29,7 @@ export class SiteService {
 					data: {
 						...createSiteDto,
 						tags: {
-							create: createSiteDto.tags,
+							create: tags,
 						},
 					},
 				})
@@ -35,24 +40,66 @@ export class SiteService {
 	}
 
 	async findAll() {
-		return await this.prisma.site.findMany({
-			include: {
-				tags: {
-					select: {
-						tag: {
-							select: {
-								id: true,
-								title: true,
+		try {
+			const siteList = await this.prisma.site.findMany({
+				include: {
+					tags: {
+						select: {
+							tag: {
+								select: {
+									id: true,
+									title: true,
+								},
 							},
 						},
 					},
 				},
-			},
-		})
+			})
+			return siteList.map((site) => {
+				return {
+					...site,
+					tags: site.tags.map((tag) => tag.tag),
+				}
+			})
+		} catch (error) {
+			throw new BadRequestException(error)
+		}
+	}
+	async getSiteDetail(idDto: IdDto) {
+		try {
+			const site = await this.prisma.site.findFirst({
+				where: {
+					id: idDto.id,
+				},
+				include: {
+					tags: {
+						select: {
+							tag: {
+								select: {
+									id: true,
+									title: true,
+								},
+							},
+						},
+					},
+				},
+      })
+      return {
+        ...site,
+        tags: site.tags.map((tag) => tag.tag),
+      }
+		} catch (error) {
+			throw new BadRequestException(error)
+		}
 	}
 
 	async update(siteDto: UpdateSiteDto) {
 		try {
+			const tags = siteDto.tags.split(',').map((tag) => {
+				return {
+					tagId: Number(tag),
+				}
+			})
 			return await this.prisma.site.update({
 				where: {
 					id: siteDto.id,
@@ -63,7 +110,7 @@ export class SiteService {
 					logo: siteDto.logo,
 					tags: {
 						deleteMany: {},
-						create: siteDto.tags,
+						create: tags,
 					},
 				},
 			})
@@ -100,17 +147,24 @@ export class SiteService {
 			throw new BadRequestException(error)
 		}
 	}
+	isValidUrl(str: string) {
+		const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+		return urlRegex.test(str)
+	}
 
 	async getSiteInfo(url: string) {
 		try {
-      const res = await this.httpService.axiosRef.get(url)
-      const $ = cheerio.load(res.data)
-      const title = $('title').text()
-      const description = $('meta[name="description"]').attr('content')
-      const logo = $('link[rel="shortcut icon"]').attr('href')
-      return {title,description,logo}
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
+			const res = await this.httpService.axiosRef.get(url)
+			const $ = cheerio.load(res.data)
+			const title = $('title').text()
+			const desc = $('meta[name="description"]').attr('content')
+			let logo = $('link[rel="shortcut icon"]').attr('href') || $('link[rel="icon"]').attr('href')
+			if (logo && !this.isValidUrl(logo)) {
+				logo = url + logo
+			}
+			return { title, desc, logo }
+		} catch (error) {
+			throw new BadRequestException(error)
+		}
 	}
 }

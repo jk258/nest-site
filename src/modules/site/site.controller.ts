@@ -14,6 +14,10 @@ export class SiteController {
 	@Get('list')
 	async findAll() {
 		return await this.siteService.findAll()
+  }
+  @Get('detail')
+	async getSiteDetail(@Query() query: IdDto) {
+		return await this.siteService.getSiteDetail(query)
 	}
 
 	@Post('update')

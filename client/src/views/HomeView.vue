@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { GetTagList, TagCreate, GetSiteInfo } from '@/assets/api/index'
+import { GetTagList, TagCreate, GetSiteInfo, GetSiteList } from '@/assets/api/index'
 import { pinyin } from 'pinyin-pro'
 import SiteItem from '@/components/siteItem/SiteItem.vue'
-import type { TagType } from '@/assets/api/api'
+import type { SiteListType, SiteType, TagType } from '@/assets/api/api'
+import { NButton, NEmpty } from 'naive-ui'
 
 type SiteTag = {
 	letter: string
@@ -27,15 +28,34 @@ GetTagList().then((res) => {
 			return pre
 		}, [])
 })
-// GetSiteInfo({url:"http://www.baidu.com"}).then(res=>{
-//   console.log(res)
-// })
+const siteList=ref<SiteListType[]>([])
+function getList() {
+  GetSiteList().then(res=>{
+    console.log(res)
+    siteList.value=res.data
+  })
+}
+getList()
+
 </script>
 
 <template>
-	<main class="container mx-auto">
-		<!-- <div class="site-list">
-			<SiteItem></SiteItem>
-		</div>  -->
+	<main class="w-[960px] mx-auto flex">
+		<div class="site-list flex-1">
+      <h3 class="text-fontSizeLarge font-bold py-2 border-b border-borderColor mb-3">书签</h3>
+			<template v-if="siteList.length>0">
+        <SiteItem class="mb-5" @removeSite="getList" v-for="(item,index) in siteList" :key="item.id" :item="item"></SiteItem>
+      </template>
+      <template v-else>
+        <NEmpty class="py-24"></NEmpty>
+      </template>
+		</div> 
+    <div class="tag-list w-1/3 ml-8">
+      <h3 class="text-fontSizeLarge font-bold py-2 border-b border-borderColor mb-3">标签</h3>
+      <div class="mb-1 flex flex-wrap" v-for="(item,index) in tagList" :key="item.letter">
+        <span class="text-primaryColor mr-1 w-4 text-center font-bold">{{ item.letter }}</span>
+        <NButton text type="primary" class="mr-2 mb-1" v-for="(tag,index1) in item.list" :key="tag.id" closable>{{ tag.title }}</NButton>
+      </div>
+    </div>
 	</main>
 </template>

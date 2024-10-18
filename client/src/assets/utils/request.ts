@@ -23,15 +23,16 @@ request.interceptors.response.use(
 		if (!response.data) {
 			return Promise.reject(response.data)
 		}
-		
 		if (response.data.code == 200|| response.data.code == 201) {
 			return response.data
 		} else {
-			discretes.message.error(response.data.msg)
 			return Promise.reject(response.data)
 		}
 	},
-	(err) => {
+  (err) => {
+    if (err.response.data && err.response.data.code == 400) {
+			discretes.message.error(err.response.data.message)
+		}
 		return Promise.reject(err)
 	},
 )

@@ -12,7 +12,6 @@ const options = ref<TagType[]>([])
 function getList() {
 	GetTagList().then((res) => {
 		options.value = res.data
-		console.log(res.data)
 	})
 }
 getList()
