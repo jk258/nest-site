@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useDiscrete } from '@/assets/utils/hooks'
 
-const baseUrl = import.meta.env.MODE == 'development' ? 'http://localhost:3000' : import.meta.env.VITE_BASEURL
+const baseUrl = import.meta.env.MODE == 'development' ? 'http://localhost:3000' : ''
 
 const request = axios.create({
 	baseURL: baseUrl + '/api',

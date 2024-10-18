@@ -28,9 +28,16 @@ const item = ref({
 			<span class="font-bold text-primaryColor text-fontSizeMedium">{{ item.title }}</span>
 		</h4>
     <div>
-      <NTag v-for="tag in item.tags" :key="tag.id" type="info">{{ tag.title }}</NTag>
+      <NTag v-for="tag in item.tags" :key="tag.id" checkable @click.stop="" size="small">{{ tag.title }}</NTag>
     </div>
     <p class="text-fontSizeSmall text-textColor3 ">{{ item.description }}</p>
+    <div>
+      <span>2021-04-05</span>
+      <div>
+        <span>编辑</span>
+        <span>删除</span>
+      </div>
+    </div>
 	</a>
 </template>
 

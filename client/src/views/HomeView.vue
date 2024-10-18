@@ -36,7 +36,6 @@ GetTagList().then((res) => {
 	<main class="container mx-auto">
 		<!-- <div class="site-list">
 			<SiteItem></SiteItem>
-		</div> -->
-		<div class="w-96"></div>
+		</div>  -->
 	</main>
 </template>

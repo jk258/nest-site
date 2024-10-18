@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: nest-site
+    build: 
+      context: .
+    ports:
+      - '3005:3000'
+    env_file:
+      - .env.prod
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app-network
+    
+networks:
+  app-network:
+    driver: bridge

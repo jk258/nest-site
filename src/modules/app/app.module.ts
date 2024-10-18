@@ -10,9 +10,9 @@ import { SiteModule } from '@/modules/site/site.module'
 
 @Module({
 	imports: [
-		// ServeStaticModule.forRoot({
-		// 	rootPath: join(__dirname, '../../../', 'client'),
-		// }),
+		ServeStaticModule.forRoot({
+			rootPath: join(__dirname, '../../../', 'static'),
+		}),
 		ConfigModule.forRoot({
 			envFilePath: '.env',
 			isGlobal: true,
