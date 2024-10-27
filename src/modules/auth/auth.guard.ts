@@ -14,7 +14,6 @@ export class AuthGuard implements CanActivate {
 	) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    return true
 		const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()])
 		if (isPublic) {
 			return true
@@ -23,7 +22,8 @@ export class AuthGuard implements CanActivate {
 		const token = this.extractTokenFromHeader(request)
 		if (!token) {
 			throw new UnauthorizedException('token is not defined')
-		}
+    }
+    
 		try {
 			const payload = await this.jwtService.verifyAsync(token, {
 				secret: this.configService.get('AUTH_SECRET'),

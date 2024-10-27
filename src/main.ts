@@ -7,7 +7,7 @@ import { CustomValidationPipe } from '@/common/pipes/CustomValidationPipe.pipe';
 
 
 function docs(app) {
-  const options = new DocumentBuilder().setTitle('导航').setDescription('导航网站').setVersion('1.0').addTag('导航').build()
+  const options = new DocumentBuilder().setTitle('书签').setDescription('书签网站').setVersion('1.0').addTag('书签').build()
   const document = SwaggerModule.createDocument(app, options)
   for (const path of Object.keys(document.paths)) {
 		const pathItem = document.paths[path]

@@ -1,7 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto, IdDto, SiteUrl, UpdateSiteDto } from './dto/site.dto'
+import { Public } from '@/common/decorators/index.decorator'
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('网站')
 @Controller('site')
 export class SiteController {
 	constructor(private readonly siteService: SiteService) {}
@@ -12,10 +15,11 @@ export class SiteController {
 	}
 
 	@Get('list')
+	@Public()
 	async findAll() {
 		return await this.siteService.findAll()
-  }
-  @Get('detail')
+	}
+	@Get('detail')
 	async getSiteDetail(@Query() query: IdDto) {
 		return await this.siteService.getSiteDetail(query)
 	}

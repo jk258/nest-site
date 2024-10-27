@@ -40,7 +40,7 @@ getList()
 </script>
 
 <template>
-	<main class="w-[960px] mx-auto flex">
+	<main class="mx-auto flex">
 		<div class="site-list flex-1">
       <h3 class="text-fontSizeLarge font-bold py-2 border-b border-borderColor mb-3">书签</h3>
 			<template v-if="siteList.length>0">

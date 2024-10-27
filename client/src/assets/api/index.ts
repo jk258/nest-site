@@ -1,6 +1,16 @@
 import type { SiteType, TagType } from '@/assets/api/api'
 import request from '@/assets/utils/request'
 
+/**
+ * 登录
+ */
+export function Login(data: { username: string; password: string }) {
+	return request.post('/auth/login', data)
+}
+/**获取用户信息 */
+export function GetUserInfo() {
+  return request.get('/auth/profile')
+}
 //#region 标签
 /**获取标签列表 */
 export function GetTagList() {

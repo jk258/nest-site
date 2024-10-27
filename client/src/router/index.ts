@@ -10,15 +10,20 @@ const router = createRouter({
 			component: () => import('@/views/HomeView.vue'),
 		},
 		{
-			path: '/about',
-			name: 'about',
-			component: () => import('../views/AboutView.vue'),
-    },
-    {
-      path: "/sitedetail",
-      name: 'site',
-      component: () => import('@/views/SiteDetail.vue'),
-    },
+			path: '/sitedetail',
+			name: 'site',
+			component: () => import('@/views/SiteDetail.vue'),
+		},
+		{
+			path: '/userlist',
+			name: '用户管理',
+			component: () => import('@/views/UserList.vue'),
+		},
+		{
+			path: '/login',
+			name: '登录',
+			component: () => import('@/views/Login.vue'),
+		},
 		{
 			path: '/:pathMatch(.*)*',
 			name: 'not-found',

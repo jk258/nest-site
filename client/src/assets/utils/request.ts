@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useDiscrete } from '@/assets/utils/hooks'
+import { useUserStore } from '@/stores/user'
 
 const baseUrl = import.meta.env.MODE == 'development' ? 'http://localhost:3000' : ''
 
@@ -11,9 +12,10 @@ const request = axios.create({
 })
 
 request.interceptors.request.use((config) => {
-	if (config.method?.toLocaleUpperCase() == 'POST') {
-		
-	}
+  const userStore = useUserStore()
+  if (userStore.token) {
+    config.headers.Authorization ='Bearer '+ userStore.token
+  }
 	return config
 })
 

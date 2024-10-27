@@ -9,7 +9,7 @@ import type { SiteType, SiteListType } from '@/assets/api/api'
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id as string
-const siteId = ref(0)
+const siteId = ref(id?Number(id):0)
 //#region 创建修改
 const formValue = ref<Omit<SiteType, 'id' | 'tags'> & { tags: number[] }>({
 	title: '',
@@ -33,7 +33,7 @@ const submit = () => {
 		if (!errors) {
 			console.log('submit!')
 			const tags = formValue.value.tags.join(',')
-			const promise = id
+			const promise = siteId.value
 				? SiteUpdate({
 						...formValue.value,
 						id: siteId.value,
@@ -71,24 +71,26 @@ const getSiteInfo = (value: string) => {
 	}
 }
 function getDetail() {
-	GetSiteDetail({ id: Number(id) }).then((res) => {
-		const data: SiteListType = res.data
-		siteId.value = data.id
-		formValue.value = {
-			title: data.title,
-			url: data.url,
-			logo: data.logo,
-			desc: data.desc || '',
-			tags: data.tags.map((item) => item.id),
-		}
-	})
+	if (siteId.value) {
+		GetSiteDetail({ id: Number(siteId.value) }).then((res) => {
+			const data: SiteListType = res.data
+			siteId.value = data.id
+			formValue.value = {
+				title: data.title,
+				url: data.url,
+				logo: data.logo,
+				desc: data.desc || '',
+				tags: data.tags.map((item) => item.id),
+			}
+		})
+	}
 }
 getDetail()
 </script>
 <template>
-	<div class="flex items-center justify-center">
+	<div class="flex items-center justify-center pb-28">
 		<div class="w-[450px] max-h-full m-auto">
-			<h3 class="font-bold text-fontSizeLarge mb-3 py-2 border-b border-borderColor">书签</h3>
+			<h3 class="font-bold text-fontSizeLarge mb-3 py-2 border-b border-borderColor">书签详情</h3>
 			<NForm ref="formRef" :model="formValue" :rules="rules" :label-width="80">
 				<NFormItem label="网址" path="url">
 					<NInput v-model:value="formValue.url" @update:value="getSiteInfo" placeholder="请输入网址"></NInput>
