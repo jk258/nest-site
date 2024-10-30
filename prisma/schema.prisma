@@ -12,8 +12,9 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  email     String   
-  password  String
+  email     String   @default("")
+  username  String   @default("")
+  password  String   @default("123456")
   role      Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

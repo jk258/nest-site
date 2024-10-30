@@ -3,7 +3,6 @@ import { IsEmail, IsNotEmpty } from 'class-validator'
 
 export class AuthDto {
 	@ApiProperty({ description: '用户名', example: '123@123.com' })
-	@IsEmail({}, { message: '请输入正确的邮箱' })
 	username: string
 
 	@ApiProperty({ description: '密码', example: 'guess' })

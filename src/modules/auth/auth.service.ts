@@ -11,20 +11,20 @@ export class AuthService {
 
 	async signIn(username: string, password: string): Promise<any> {
 		try {
-			let user = await this.prisma.user.findFirst({ where: { email: username } })
+			let user = await this.prisma.user.findFirst({ where: { username: username } })
 
 			if (!user) {
 				user = await this.prisma.user.create({
-					data: {
-						email: username,
-						password: String(password),
-					},
+          data: {
+            username: username,
+            password: password,
+          }
 				})
       }
 			if (user?.password != password) {
 				throw new BadRequestException('用户名或密码错误')
 			}
-			const payload = { userId: user.id, username: user.email, role: user.role }
+			const payload = { userId: user.id, username: user.username, role: user.role }
 			return {
 				access_token: await this.jwtService.signAsync(payload),
 			}

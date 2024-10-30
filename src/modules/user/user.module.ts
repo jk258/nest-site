@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
-import { SiteService } from './site.service';
-import { SiteController } from './site.controller';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
 import { PrismaModule } from '@/prisma/prisma.module';
-import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
 	imports: [
 		PrismaModule,
-		HttpModule,
 		JwtModule.registerAsync({
 			useFactory: async (configService: ConfigService) => {
 				return {
@@ -21,7 +19,7 @@ import { ConfigService } from '@nestjs/config';
 			inject: [ConfigService],
 		}),
 	],
-	controllers: [SiteController],
-	providers: [SiteService],
+	controllers: [UserController],
+	providers: [UserService],
 })
-export class SiteModule {}
+export class UserModule {}

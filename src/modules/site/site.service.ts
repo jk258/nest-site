@@ -3,6 +3,8 @@ import { CreateSiteDto, UpdateSiteDto, IdDto } from './dto/site.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 import { HttpService } from '@nestjs/axios'
 import * as cheerio from 'cheerio'
+import { ResUserDto } from '@/modules/user/dto/user.dto'
+import { UserRole } from '@/types/enmus'
 
 @Injectable()
 export class SiteService {
@@ -10,8 +12,11 @@ export class SiteService {
 		private readonly prisma: PrismaService,
 		private readonly httpService: HttpService,
 	) {}
-	async create(createSiteDto: CreateSiteDto) {
-		try {
+	async create(user: ResUserDto, createSiteDto: CreateSiteDto) {
+    try {
+      if (user.role > UserRole.user) {
+				throw new BadRequestException('权限不足')
+			}
 			const tags = createSiteDto.tags.split(',').map((tag) => {
 				return {
 					tagId: Number(tag),
@@ -83,18 +88,21 @@ export class SiteService {
 						},
 					},
 				},
-      })
-      return {
-        ...site,
-        tags: site.tags.map((tag) => tag.tag),
-      }
+			})
+			return {
+				...site,
+				tags: site.tags.map((tag) => tag.tag),
+			}
 		} catch (error) {
 			throw new BadRequestException(error)
 		}
 	}
 
-	async update(siteDto: UpdateSiteDto) {
-		try {
+	async update(user: ResUserDto, siteDto: UpdateSiteDto) {
+    try {
+      if (user.role > UserRole.user) {
+				throw new BadRequestException('权限不足')
+			}
 			const tags = siteDto.tags.split(',').map((tag) => {
 				return {
 					tagId: Number(tag),
@@ -119,8 +127,11 @@ export class SiteService {
 		}
 	}
 
-	async remove(idDto: IdDto) {
-		try {
+	async remove(user: ResUserDto, idDto: IdDto) {
+    try {
+      if (user.role > UserRole.user) {
+				throw new BadRequestException('权限不足')
+			}
 			const site = await this.prisma.site.findFirst({
 				where: {
 					id: idDto.id,
