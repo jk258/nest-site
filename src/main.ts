@@ -1,7 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/modules/app/app.module';
-import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
-import { AllExceptionsFilter } from '@/common/filters/any-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CustomValidationPipe } from '@/common/pipes/CustomValidationPipe.pipe';
 
@@ -76,9 +74,6 @@ async function bootstrap() {
   
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new CustomValidationPipe())
-  app.useGlobalInterceptors(new TransformInterceptor());
-  
-  app.useGlobalFilters(new AllExceptionsFilter());
   docs(app)
   await app.listen(3000);
 }

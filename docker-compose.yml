@@ -15,6 +15,7 @@ services:
       - DATABASE_URL=file:/app/db/prod.db
     volumes:
       - ./data/db:/app/db
+      - ./data/logs:/app/logs
     networks:
       - app-network
 
