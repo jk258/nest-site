@@ -2,18 +2,22 @@ version: '3.8'
 
 services:
   app:
+    restart: always
     container_name: nest-site
-    build: 
+    build:
       context: .
+      dockerfile: Dockerfile
+      no_cache: true
     ports:
       - '3005:3000'
-    env_file:
-      - .env.prod
+    environment:
+      - AUTH_SECRET=x4gwbtf6te5qs94ru1532ns0nrr602t6jvc4ursrniu5mbs3jzqh5ncli0ponz45
+      - DATABASE_URL=file:/app/db/prod.db
     volumes:
-      - ./data:/app/data
+      - ./data/db:/app/db
     networks:
       - app-network
-    
+
 networks:
   app-network:
     driver: bridge

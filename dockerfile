@@ -1,11 +1,13 @@
 FROM node:20.12.2-alpine as build-stage
 
+
 WORKDIR /app
 
 # 构建后端
 COPY ./*.json ./
 
 RUN npm config set registry https://registry.npmmirror.com/
+
 RUN npm install
 
 COPY . .
@@ -19,16 +21,20 @@ RUN cd client && npm install && npm run build
 FROM node:20.12.2-alpine as production-stage
 
 WORKDIR /app
+RUN echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.4/main/" > /etc/apk/repositories
+RUN apk update && apk add --no-cache bash
+
 COPY --from=build-stage /app/dist /app/dist
 Copy --from=build-stage /app/prisma /app/prisma
+
+Copy --from=build-stage /app/client/dist /app/static
+
 COPY package*.json ./
 
-COPY --from=build-stage /app/client/dist /app/static
+COPY ./script.sh ./script.sh
+RUN chmod +x /app/script.sh
 
 RUN npm config set registry https://registry.npmmirror.com/
 RUN npm install --production
-COPY .env.prod .env
-RUN npx prisma migrate dev --name init
-EXPOSE 3000
 
-CMD ["node", "/app/dist/main.js"]
+CMD ["/app/script.sh"]
