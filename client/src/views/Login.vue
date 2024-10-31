@@ -38,7 +38,7 @@ const submit = () => {
 			<h3 class="font-bold text-fontSizeLarge mb-3 py-2 border-b border-borderColor">登录</h3>
 			<NForm ref="formRef" :model="formValue" :rules="rules" :label-width="80">
 				<NFormItem label="邮箱" path="username">
-					<NInput v-model:value="formValue.username" :input-props="{autocomplete:'on'}"  @keyup.enter.native="submit" placeholder="请输入邮箱"></NInput>
+					<NInput v-model:value="formValue.username" :input-props="{ name: 'bookmark-username', autocomplete: 'on' }" @keyup.enter.native="submit" placeholder="请输入邮箱"></NInput>
 				</NFormItem>
 				<NFormItem label="密码" path="password">
 					<NInput v-model:value="formValue.password" type="password" @keyup.enter.native="submit" placeholder="请输入密码"></NInput>

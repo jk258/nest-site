@@ -13,14 +13,6 @@ export class AuthService {
 		try {
 			let user = await this.prisma.user.findFirst({ where: { username: username } })
 
-			if (!user) {
-				user = await this.prisma.user.create({
-          data: {
-            username: username,
-            password: password,
-          }
-				})
-      }
 			if (user?.password != password) {
 				throw new BadRequestException('用户名或密码错误')
 			}

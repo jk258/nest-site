@@ -30,7 +30,8 @@ export class AuthGuard implements CanActivate {
 			})
       request['user'] = {
         userId: payload.userId,
-        username: payload.username
+        username: payload.username,
+        role: payload.role
       }
 		} catch {
 			throw new UnauthorizedException('token验证失败')

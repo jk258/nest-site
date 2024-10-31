@@ -7,10 +7,12 @@ import request from '@/assets/utils/request'
 export function Login(data: { username: string; password: string }) {
 	return request.post('/auth/login', data)
 }
+//#region 用户
 /**获取用户信息 */
 export function GetUserInfo() {
-  return request.get('/auth/profile')
+  return request.get('/user/info')
 }
+//#endregion
 //#region 标签
 /**获取标签列表 */
 export function GetTagList() {
