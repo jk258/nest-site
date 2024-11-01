@@ -5,6 +5,7 @@
 /client/node_modules
 /client/.vscode
 /client/dist
+/static/upload/*
 # Logs
 logs
 *.log

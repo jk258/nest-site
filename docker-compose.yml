@@ -16,6 +16,7 @@ services:
     volumes:
       - ./data/db:/app/db
       - ./data/logs:/app/logs
+      - ./data/upload:/app/static/upload
     networks:
       - app-network
 
