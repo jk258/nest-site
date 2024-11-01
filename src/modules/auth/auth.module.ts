@@ -15,7 +15,7 @@ import { PrismaModule } from '@/prisma/prisma.module';
         return {
 					secret: configService.get<string>('AUTH_SECRET'),
 					global: true,
-					signOptions: { expiresIn: '60s' },
+					signOptions: { expiresIn: '2 days' },
 				}
       },
       inject: [ConfigService],

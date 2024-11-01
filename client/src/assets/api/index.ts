@@ -1,4 +1,4 @@
-import type { SiteType, TagType } from '@/assets/api/api'
+import type { SiteType, TagType, UserType } from '@/assets/api/api'
 import request from '@/assets/utils/request'
 
 /**
@@ -11,6 +11,21 @@ export function Login(data: { username: string; password: string }) {
 /**获取用户信息 */
 export function GetUserInfo() {
   return request.get('/user/info')
+}
+/**创建用户 */
+export function CreateUser(data: Omit<UserType,'id'>) {
+  return request.post('/user/create', data)
+}
+/**更新用户 */
+export function UpdateUser(data: UserType) {
+	return request.post('/user/update', data)
+}
+/**用户列表 */
+export function UserList() {
+  return request.get('/user/list')
+}
+export function DeleteUser() {
+	return request.post('/user/delete')
 }
 //#endregion
 //#region 标签

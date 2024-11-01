@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
 			throw new UnauthorizedException('token is not defined')
     }
     
-		try {
+    try {
 			const payload = await this.jwtService.verifyAsync(token, {
 				secret: this.configService.get('AUTH_SECRET'),
 			})
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
         role: payload.role
       }
 		} catch {
-			throw new UnauthorizedException('token验证失败')
+			throw new UnauthorizedException('登录过期，请重新登录')
 		}
 		return true
 	}

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useDiscrete } from '@/assets/utils/hooks'
 import { useUserStore } from '@/stores/user'
+import router from '@/router'
 
 const baseUrl = import.meta.env.MODE == 'development' ? 'http://localhost:3000' : ''
 
@@ -18,7 +19,6 @@ request.interceptors.request.use((config) => {
   }
 	return config
 })
-
 const discretes = useDiscrete()
 request.interceptors.response.use(
 	(response) => {
@@ -27,14 +27,24 @@ request.interceptors.response.use(
 		}
 		if (response.data.code == 200|| response.data.code == 201) {
 			return response.data
-		} else {
+    } else {
+      
 			return Promise.reject(response.data)
 		}
 	},
   (err) => {
-    if (err.response.data && err.response.data.code == 400) {
-			discretes.message.error(err.response.data.message)
+    if (err.response.data && [400, 401].includes(err.response.data.code)) {
+      discretes.message.error(err.response.data.message)
+      if (err.response.data.code == 401) {
+        const userStore = useUserStore()
+        userStore.setToken('')
+        router.push({
+					path: '/login',
+				})
+      }
 		}
+    
+
 		return Promise.reject(err)
 	},
 )

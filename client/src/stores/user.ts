@@ -17,6 +17,8 @@ export const useUserStore = defineStore(
         GetUserInfo().then(res => {
           userInfo.value = res.data
         })
+      } else {
+        userInfo.value=null
       }
     }
 		return { token,  setToken, userInfo }

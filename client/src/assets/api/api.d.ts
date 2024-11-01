@@ -18,3 +18,9 @@ export interface SiteType{
 export interface SiteListType extends SiteType {
 	tags: TagType[]
 }
+
+export interface UserType{
+  id: number
+  role: number
+  username:string
+}
