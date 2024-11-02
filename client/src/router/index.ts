@@ -17,7 +17,7 @@ const router = createRouter({
 		{
 			path: '/userlist',
 			name: '用户管理',
-			component: () => import('@/views/UserList.vue'),
+			component: () => import('@/views/userlist/UserList.vue'),
 		},
 		{
 			path: '/login',

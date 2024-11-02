@@ -10,8 +10,8 @@ export class UserService {
 		try {
 			if (user.role !== UserRole.admin) {
 				throw new BadRequestException('权限不足')
-			} else {
-				let userNew = await this.prisma.user.findFirst({ where: { username: user.username } })
+      } else {
+        let userNew = await this.prisma.user.findFirst({ where: { username: userDto.username } })
 				if (userNew) {
 					throw new BadGatewayException('用户已存在')
 				} else {
@@ -57,7 +57,11 @@ export class UserService {
 		try {
 			if (user.role !== UserRole.admin) {
 				throw new BadRequestException('权限不足')
-			} else {
+      } else {
+        let userNew = await this.prisma.user.findFirst({ where: { id: userDto.id } })
+        if (!userNew) {
+          throw new BadGatewayException('用户不存在')
+        }
 				return await this.prisma.user.update({
 					where: { id: userDto.id },
 					data: {
@@ -75,12 +79,16 @@ export class UserService {
 			throw new BadRequestException(error)
 		}
 	}
-  remove(user: ResUserDto, id: number) {
+  async remove(user: ResUserDto, id: number) {
 		try {
 			if (user.role !== UserRole.admin) {
 				throw new BadRequestException('权限不足')
-			} else {
-				return this.prisma.user.delete({
+      } else {
+        let userNew = await this.prisma.user.findFirst({ where: { id: id } })
+				if (!userNew) {
+					throw new BadGatewayException('用户不存在')
+				}
+				return await this.prisma.user.delete({
 					where: { id: id },
 					select: {
 						id: true,
