@@ -6,11 +6,6 @@ export class CustomValidationPipe implements PipeTransform {
 		if (!metatype || !this.toValidate(metatype)) {
 			return value
     }
-    for (const key in value) {
-      if (value[key]&&typeof value[key]==='string'&&/^[+-]?\d+(\.\d+)?$/.test(value[key])) {
-        value[key]=Number(value[key])
-      }
-    }
 		const object = plainToClass(metatype, value)
     const errors = await validate(object)
     if (errors.length > 0) {
