@@ -81,7 +81,7 @@ export class UserController {
 	@UseGuards(AuthGuard)
 	@Post('update')
 	async update(@Request() req, @Body() userDto: UpdateUserDto) {
-		return await this.userService.update(req, userDto)
+		return await this.userService.update(req.user, userDto)
 	}
 
 	@ApiOperation({ summary: '删除用户' })

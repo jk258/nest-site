@@ -40,7 +40,6 @@ export class UserService {
 				throw new BadRequestException('权限不足')
 			} else {
 				return await this.prisma.user.findMany({
-					where: { role: { lt: user.role } },
 					select: {
 						id: true,
 						username: true,
@@ -54,7 +53,7 @@ export class UserService {
 	}
 
 	async update(user: ResUserDto, userDto: UpdateUserDto) {
-		try {
+    try {
 			if (user.role !== UserRole.admin) {
 				throw new BadRequestException('权限不足')
       } else {
