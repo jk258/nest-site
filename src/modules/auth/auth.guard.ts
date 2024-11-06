@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
 				secret: this.configService.get('AUTH_SECRET'),
 			})
       request['user'] = {
-        userId: payload.userId,
+        id: payload.userId,
         username: payload.username,
         role: payload.role
       }

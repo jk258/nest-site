@@ -67,8 +67,8 @@ export class SiteService {
 			})
 			return siteList.map((site) => {
 				return {
-          ...site,
-          logo:site.logo?site.logo:this.config.get<string>('SITE_DOMAIN')+site.logo,
+					...site,
+					logo: site.logo ? this.config.get<string>('SITE_DOMAIN') + site.logo : site.logo,
 					tags: site.tags.map((tag) => tag.tag),
 				}
 			})

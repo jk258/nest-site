@@ -24,8 +24,8 @@ export function UpdateUser(data: UserType) {
 export function UserList() {
   return request.get('/user/list')
 }
-export function DeleteUser() {
-	return request.post('/user/delete')
+export function DeleteUser(data:{id:number}) {
+	return request.post('/user/delete',data)
 }
 //#endregion
 //#region 标签

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { NConfigProvider, NIcon, NText, dateZhCN, zhCN } from 'naive-ui'
+import { NButton, NConfigProvider, NIcon, NText, dateZhCN, zhCN } from 'naive-ui'
 import { useUserStore } from '@/stores/user'
+import Logout from '@/components/icons/Logout.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -9,6 +10,12 @@ const goUserlist = () => {
 	router.push({
 		path: '/userlist',
 	})
+}
+const logout = () => {
+  userStore.setToken('')
+  router.replace({
+    path:'/'
+  })
 }
 </script>
 
@@ -34,13 +41,19 @@ const goUserlist = () => {
 						to="/login">
 						登录
 					</RouterLink>
-					<span
-						@click="goUserlist"
-						v-if="userStore.userInfo"
-						class="text-fontSizeMedium font-bold hover:text-primaryColorHover ml-5"
-						:class="{ 'text-primaryColor': $route.path === '/login', 'cursor-pointer': userStore.userInfo.role == 0 }">
-						{{ userStore.userInfo.username }}
-					</span>
+					<template v-if="userStore.userInfo">
+						<span
+							@click="goUserlist"
+							class="text-fontSizeMedium font-bold hover:text-primaryColorHover ml-5 flex items-center"
+							:class="{ 'text-primaryColor': $route.path === '/login', 'cursor-pointer': userStore.userInfo.role == 0 }">
+							{{ userStore.userInfo.username }}
+						</span>
+						<NButton @click="logout" text type="error">
+							<NIcon size="20" class="ml-3">
+								<Logout></Logout>
+							</NIcon>
+						</NButton>
+					</template>
 				</nav>
 			</header>
 			<RouterView class="h-[calc(100vh-96px)]" />

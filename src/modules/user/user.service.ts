@@ -38,8 +38,15 @@ export class UserService {
 		try {
 			if (user.role !== UserRole.admin) {
 				throw new BadRequestException('权限不足')
-			} else {
-				return await this.prisma.user.findMany({
+      } else {
+        console.log()
+        
+        return await this.prisma.user.findMany({
+          where: {
+            id: {
+              not: user.id,
+            },
+          },
 					select: {
 						id: true,
 						username: true,

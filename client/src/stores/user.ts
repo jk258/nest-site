@@ -26,7 +26,7 @@ export const useUserStore = defineStore(
 	{
 		persist: {
 			key: 'bookmark-user-tore',
-			storage: sessionStorage,
+			storage: localStorage,
 		},
 	},
 )
