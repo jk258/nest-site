@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, HttpCode, HttpStatus, Request } from '@nestjs/common';
 import { SiteService } from './site.service';
-import { CreateSiteDto, IdDto, ResSiteDto, SiteUrl, UpdateSiteDto } from './dto/site.dto'
+import { CreateSiteDto, IdDto, ResSiteDto, SiteSearchDto, SiteUrl, UpdateSiteDto } from './dto/site.dto'
 import { Public } from '@/common/decorators/index.decorator'
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@/modules/auth/auth.guard';
@@ -38,8 +38,8 @@ export class SiteController {
 	@HttpCode(HttpStatus.OK)
 	@Get('list')
 	@Public()
-	async findAll() {
-		return await this.siteService.findAll()
+	async findAll(@Query() query: SiteSearchDto) {
+		return await this.siteService.findAll(query)
 	}
 
 	@ApiOperation({ summary: '获取网站详情' })

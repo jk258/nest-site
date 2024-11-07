@@ -7,8 +7,9 @@ export class CreateSiteDto {
 	@IsNotEmpty({ message: '标题不能为空' })
 	title: string
 
-	@ApiProperty({ description: '网址', example: 'http://www.baidu.com' })
-	@IsNotEmpty({ message: '地址不能为空' })
+	@ApiProperty({ description: '网址', example: 'https://www.baidu.com' })
+	@IsNotEmpty({ message: 'url不能为空' })
+	@IsUrl({}, { message: 'url格式不正确' })
 	url: string
 
 	@ApiProperty({ description: 'logo', example: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png' })
@@ -36,9 +37,11 @@ export class ResSiteDto extends OmitType(UpdateSiteDto, ['tags']) {
   tags: UpdateTagDto[]
 }
 
-export class SiteUrl {
-	@ApiProperty({ description: '网址', example: 'https://www.baidu.com' })
-	@IsNotEmpty({ message: 'url不能为空' })
-	@IsUrl({}, { message: 'url格式不正确' })
-	url: string
+export class SiteUrl extends PickType(UpdateSiteDto, ['url']) {
+	
+}
+
+export class SiteSearchDto{
+  title:string
+  tagId: number
 }

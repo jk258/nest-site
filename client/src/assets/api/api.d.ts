@@ -25,3 +25,8 @@ export interface UserType{
   username:string
 }
 
+
+export interface SiteSearchType{
+  title?:string
+  tagId?:number
+}

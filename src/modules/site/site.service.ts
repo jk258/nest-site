@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { CreateSiteDto, UpdateSiteDto, IdDto } from './dto/site.dto'
+import { CreateSiteDto, UpdateSiteDto, IdDto, SiteSearchDto } from './dto/site.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 import { HttpService } from '@nestjs/axios'
 import * as cheerio from 'cheerio'
@@ -13,12 +13,12 @@ import { ConfigService } from '@nestjs/config'
 export class SiteService {
 	constructor(
 		private readonly prisma: PrismaService,
-    private readonly httpService: HttpService,
-    private readonly config: ConfigService
+		private readonly httpService: HttpService,
+		private readonly config: ConfigService,
 	) {}
 	async create(user: ResUserDto, createSiteDto: CreateSiteDto) {
-    try {
-      if (user.role > UserRole.user) {
+		try {
+			if (user.role > UserRole.user) {
 				throw new BadRequestException('权限不足')
 			}
 			const tags = createSiteDto.tags.split(',').map((tag) => {
@@ -33,8 +33,8 @@ export class SiteService {
 			})
 			if (site) {
 				throw new BadRequestException(createSiteDto.title + '已存在')
-      } else {
-        createSiteDto.logo = createSiteDto.logo.replace(this.config.get<string>('SITE_DOMAIN'), '')
+			} else {
+				createSiteDto.logo = createSiteDto.logo.replace(this.config.get<string>('SITE_DOMAIN'), '')
 				return await this.prisma.site.create({
 					data: {
 						...createSiteDto,
@@ -49,9 +49,32 @@ export class SiteService {
 		}
 	}
 
-	async findAll() {
+	async findAll(siteSearch: SiteSearchDto) {
 		try {
+			console.log(siteSearch)
+			const whereData: {
+				title?: { contains: string }
+				tags?: {
+					some: {
+						tagId: number
+					}
+				}
+			} = {}
+			if (siteSearch.title) {
+				whereData.title = {
+					contains: siteSearch.title,
+				}
+			}
+			if (siteSearch.tagId > 0) {
+				whereData.tags = {
+					some: {
+						tagId: Number(siteSearch.tagId),
+					},
+				}
+			}
+
 			const siteList = await this.prisma.site.findMany({
+				where: whereData,
 				include: {
 					tags: {
 						select: {
@@ -65,6 +88,8 @@ export class SiteService {
 					},
 				},
 			})
+			console.log(siteList)
+
 			return siteList.map((site) => {
 				return {
 					...site,
@@ -105,16 +130,16 @@ export class SiteService {
 	}
 
 	async update(user: ResUserDto, siteDto: UpdateSiteDto) {
-    try {
-      if (user.role > UserRole.user) {
+		try {
+			if (user.role > UserRole.user) {
 				throw new BadRequestException('权限不足')
 			}
 			const tags = siteDto.tags.split(',').map((tag) => {
 				return {
 					tagId: Number(tag),
 				}
-      })
-      siteDto.logo = siteDto.logo.replace(this.config.get<string>('SITE_DOMAIN'), '')
+			})
+			siteDto.logo = siteDto.logo.replace(this.config.get<string>('SITE_DOMAIN'), '')
 			return await this.prisma.site.update({
 				where: {
 					id: siteDto.id,
@@ -135,8 +160,8 @@ export class SiteService {
 	}
 
 	async remove(user: ResUserDto, idDto: IdDto) {
-    try {
-      if (user.role > UserRole.user) {
+		try {
+			if (user.role > UserRole.user) {
 				throw new BadRequestException('权限不足')
 			}
 			const site = await this.prisma.site.findFirst({
@@ -171,30 +196,30 @@ export class SiteService {
 	}
 
 	async getSiteInfo(url: string) {
-    try {
-      const res = await this.httpService.axiosRef.get(url, {
-        headers: {
-          "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
-        }
-      })
+		try {
+			const res = await this.httpService.axiosRef.get(url, {
+				headers: {
+					'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+				},
+			})
 			const $ = cheerio.load(res.data)
 			const title = $('title').text()
 			const desc = $('meta[name="description"]').attr('content')
-      let logo = $('link[rel="shortcut icon"]').attr('href') || $('link[rel="icon"]').attr('href')
+			let logo = $('link[rel="shortcut icon"]').attr('href') || $('link[rel="icon"]').attr('href')
 			if (logo) {
 				if (!this.isValidUrl(logo)) {
 					logo = url + logo
 				}
 				const resLogo = await this.httpService.axiosRef.get(logo, {
 					responseType: 'arraybuffer',
-        })
-        const buffer = Buffer.from(resLogo.data)
-        const logoPaths = logo.split('/')
-        const logoName = String(+new Date()) + '-' + String(Math.random()).split('.')[1] + '-' + logoPaths[logoPaths.length - 1]
-        writeFileSync(join(__dirname, '../../../static/upload/' + logoName), buffer)
-        logo = this.config.get<string>('SITE_DOMAIN')+'/upload/' + logoName
+				})
+				const buffer = Buffer.from(resLogo.data)
+				const logoPaths = logo.split('/')
+				const logoName = String(+new Date()) + '-' + String(Math.random()).split('.')[1] + '-' + logoPaths[logoPaths.length - 1]
+				writeFileSync(join(__dirname, '../../../static/upload/' + logoName), buffer)
+				logo = this.config.get<string>('SITE_DOMAIN') + '/upload/' + logoName
 			}
-      
+
 			return { title, desc, logo }
 		} catch (error) {
 			throw new BadRequestException(error)

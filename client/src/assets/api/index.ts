@@ -1,4 +1,4 @@
-import type { SiteType, TagType, UserType } from '@/assets/api/api'
+import type { SiteSearchType, SiteType, TagType, UserType } from '@/assets/api/api'
 import request from '@/assets/utils/request'
 
 /**
@@ -54,8 +54,10 @@ export function GetSiteInfo(data:{url:string}) {
   })
 }
 /**获取书签列表 */
-export function GetSiteList() {
-  return request.get('/site/list')
+export function GetSiteList(data: SiteSearchType) {
+	return request.get('/site/list', {
+		params: data,
+	})
 }
 /**获取书签详情 */
 export function GetSiteDetail(data:Pick<SiteType,'id'>) {
