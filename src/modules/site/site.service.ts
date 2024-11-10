@@ -51,7 +51,6 @@ export class SiteService {
 
 	async findAll(siteSearch: SiteSearchDto) {
 		try {
-			console.log(siteSearch)
 			const whereData: {
 				title?: { contains: string }
 				tags?: {
@@ -88,7 +87,6 @@ export class SiteService {
 					},
 				},
 			})
-			console.log(siteList)
 
 			return siteList.map((site) => {
 				return {
