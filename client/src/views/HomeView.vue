@@ -4,8 +4,10 @@ import { NButton, NEmpty, NIcon, NInput } from 'naive-ui'
 import { pinyin } from 'pinyin-pro'
 import SiteItem from '@/components/siteItem/SiteItem.vue'
 import type { SiteListType, SiteSearchType, SiteType, TagType } from '@/assets/api/api'
-import { GetTagList, TagCreate, GetSiteInfo, GetSiteList } from '@/assets/api/index'
-import { Search, Edit } from '@/components/icons'
+import { GetTagList, TagCreate, GetSiteInfo, GetSiteList, TagDelete } from '@/assets/api/index'
+import { Search, Edit, Close } from '@/components/icons'
+
+const isEdit = ref(false)
 
 //#region 标签列表
 type SiteTag = {
@@ -16,24 +18,27 @@ const tag = ref<TagType | null>(null)
 const tagOriginList = ref<TagType[]>([])
 const tagList = ref<SiteTag[]>([])
 /**获取所有标签 */
-GetTagList().then((res) => {
-	tagOriginList.value = res.data
-	tagList.value = res.data
-		.sort((a: TagType, b: TagType) => pinyin(a.title).localeCompare(pinyin(b.title)))
-		.reduce((pre: SiteTag[], cur: TagType) => {
-			const key = pinyin(cur.title)[0].toLocaleUpperCase()
-			const index = pre.findIndex((item) => item.letter === key)
-			if (index !== -1) {
-				pre[index].list.push(cur)
-			} else {
-				pre.push({
-					letter: key,
-					list: [cur],
-				})
-			}
-			return pre
-		}, [])
-})
+function getAllTags() {
+	GetTagList().then((res) => {
+		tagOriginList.value = res.data
+		tagList.value = res.data
+			.sort((a: TagType, b: TagType) => pinyin(a.title).localeCompare(pinyin(b.title)))
+			.reduce((pre: SiteTag[], cur: TagType) => {
+				const key = pinyin(cur.title)[0].toLocaleUpperCase()
+				const index = pre.findIndex((item) => item.letter === key)
+				if (index !== -1) {
+					pre[index].list.push(cur)
+				} else {
+					pre.push({
+						letter: key,
+						list: [cur],
+					})
+				}
+				return pre
+			}, [])
+	})
+}
+getAllTags()
 //#endregion
 
 //#region 网站列表
@@ -73,6 +78,12 @@ const tagSearch = (tagVal: TagType) => {
 const siteSearch = () => {
 	getList()
 }
+const removeTag = (tagItem: TagType) => {
+	TagDelete({ id: tagItem.id }).then(() => {
+    getList()
+    getAllTags()
+	})
+}
 </script>
 
 <template>
@@ -90,7 +101,7 @@ const siteSearch = () => {
 							</template>
 						</NInput>
 
-						<NButton class="ml-3 px-2" type="primary" secondary @click="siteSearch">
+						<NButton class="ml-3 px-2" type="primary" secondary @click="isEdit = !isEdit">
 							<NIcon size="20">
 								<Edit></Edit>
 							</NIcon>
@@ -98,7 +109,15 @@ const siteSearch = () => {
 					</div>
 				</h3>
 				<template v-if="siteList.length > 0">
-					<SiteItem class="mb-5" @removeSite="getList" @tagSearch="tagSearch" v-for="(item, index) in siteList" :key="item.id" :tag="tag" :item="item"></SiteItem>
+					<SiteItem
+						class="mb-5"
+						@removeSite="getList"
+						@tagSearch="tagSearch"
+						v-for="(item, index) in siteList"
+						:key="item.id"
+						:tag="tag"
+						:item="item"
+						:isEdit="isEdit"></SiteItem>
 				</template>
 				<template v-else>
 					<NEmpty class="py-24"></NEmpty>
@@ -111,13 +130,18 @@ const siteSearch = () => {
 					<NButton
 						text
 						@click="tagSearch(tagItem)"
-						class="mr-2 mb-1"
+						class="mr-2 mb-1 group"
 						:type="tag?.id == tagItem.id ? 'primary' : 'default'"
 						:class="{ 'font-bold': tag?.id == tagItem.id }"
 						v-for="(tagItem, index1) in item.list"
 						:key="tagItem.id"
 						closable>
 						{{ tagItem.title }}
+						<NButton @click.stop="removeTag(tagItem)" class="ml-1 hidden group-hover:block" v-if="isEdit" text type="error" secondary>
+							<NIcon size="14">
+								<Close></Close>
+							</NIcon>
+						</NButton>
 					</NButton>
 				</div>
 			</div>

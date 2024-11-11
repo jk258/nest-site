@@ -72,7 +72,8 @@ export class UserService {
 					where: { id: userDto.id },
 					data: {
 						username: userDto.username,
-						role: userDto.role,
+            role: userDto.role,
+            password: userDto.password||'123456'
 					},
 					select: {
 						id: true,

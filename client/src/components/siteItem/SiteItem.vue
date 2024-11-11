@@ -7,7 +7,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const props=defineProps<{
   item: SiteListType,
-  tag:TagType|null
+  tag: TagType | null,
+  isEdit:boolean
 }>()
 
 const emit = defineEmits<{
@@ -41,7 +42,7 @@ const searchTag = (tagItem: TagType) => {
 			<img class="w-5 h-5 object-cover" :src="item.logo" :alt="item.title" />
 			<span class="font-bold text-primaryColor text-fontSizeMedium line-clamp-1 group-hover:underline">{{ item.title }}</span>
 		</h4>
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-2" v-if="item.tags.length>0">
 			#
 			<NButton text :type="tag?.id == tagItem.id ? 'primary' : 'default'" v-for="tagItem in item.tags" :key="tagItem.id" checkable @click.prevent="searchTag(tagItem)" size="small">
 				{{ tagItem.title }}
@@ -50,7 +51,7 @@ const searchTag = (tagItem: TagType) => {
 		<p class="text-fontSizeSmall text-textColor3 line-clamp-1">{{ item.desc }}</p>
 		<div class="flex items-center gap-3">
 			<span class="text-textColor3 leading-6">2021-04-05</span>
-			<div class="flex items-center gap-2">
+			<div class="flex items-center gap-2" v-if="isEdit">
 				<NButton @click.prevent="editSite(item)" text type="primary">编辑</NButton>
 				<NButton @click.prevent="removeSite(item)" text type="error">删除</NButton>
 			</div>

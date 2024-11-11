@@ -12,7 +12,7 @@ export class AuthService {
 	async signIn(username: string, password: string): Promise<any> {
 		try {
 			let user = await this.prisma.user.findFirst({ where: { username: username } })
-
+      
 			if (user?.password != password) {
 				throw new BadRequestException('用户名或密码错误')
 			}
