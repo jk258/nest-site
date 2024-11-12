@@ -1,6 +1,6 @@
 import { Controller, Request, Get, Post, Body, Patch, Param, Delete, UseGuards, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common'
 import { UserService } from './user.service'
-import { CreateUserDto, IdDto, ResUserDto, UpdateUserDto } from './dto/user.dto'
+import { CreateUserDto, IdDto, ResUserDto, UpdateUserDto, UserInfoDto } from './dto/user.dto'
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from '@/modules/auth/auth.guard'
 
@@ -101,5 +101,24 @@ export class UserController {
 	@Post('delete')
 	async remove(@Request() req, @Body() idDto: IdDto) {
 		return await this.userService.remove(req.user, idDto.id)
+	}
+
+	@ApiOperation({ summary: '修改用户信息' })
+	@ApiHeader({
+		name: 'authorization',
+		description: '用户token',
+		example: 'Bearer token',
+		required: true,
+	})
+	@ApiResponse({
+		status: 200,
+		type: ResUserDto,
+		description: '用户信息',
+	})
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(AuthGuard)
+	@Post('updateinfo')
+	async updateInfo(@Request() req, @Body() userDto: UserInfoDto) {
+		return await this.userService.updateInfo(req.user, userDto)
 	}
 }

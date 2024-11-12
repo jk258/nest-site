@@ -57,7 +57,7 @@ const submitForm = () => {
 				<NInput v-model:value="formValue.username" placeholder="请输入用户名"></NInput>
 			</NFormItem>
 			<NFormItem label="密码" path="password">
-				<NInput v-model:value="formValue.password" placeholder="请输入用户名"></NInput>
+				<NInput v-model:value="formValue.password" placeholder="请输入密码"></NInput>
 			</NFormItem>
 			<NFormItem label="角色" path="role">
 				<NSelect v-model:value="formValue.role" :options="userRoles"></NSelect>

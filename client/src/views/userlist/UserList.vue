@@ -4,7 +4,7 @@ import type { UserType } from '@/assets/api/api'
 import { UserRole } from '@/assets/utils/utils'
 import { useUserStore } from '@/stores/user'
 import UserDetail from '@/views/userlist/UserDetail.vue'
-import { NForm, NButton, NDataTable, NPopconfirm, type DataTableColumns } from 'naive-ui'
+import { NForm,NFormItem,NInput, NButton, NDataTable, NPopconfirm, type DataTableColumns, type FormInst } from 'naive-ui'
 import { ref } from 'vue'
 
 const userStore = useUserStore()
@@ -71,14 +71,38 @@ const removeUser = (row: UserType) => {
 		getUserList()
 	})
 }
+// const formValue = ref({
+// 	password: '',
+// })
+// const formRef = ref<FormInst | null>(null)
+// const rules = {
+// 	password: [
+// 		{
+// 			required: true,
+// 			message: '请输入密码',
+// 			trigger: 'blur',
+// 		},
+// 	],
+// }
+// const submitForm = () => {
+//   formRef.value?.validate((errors) => {
+//     if (!errors) {
+//     } 
+//   })
+// }
 </script>
 <template>
 	<div>
-    <div>
-      <!-- <NForm>
-        
-      </NForm> -->
-    </div>
+		<!-- <div>
+			<NForm class="w-[500px] shadow-boxShadow3 p-5 pt-8 rounded-lg mx-auto mt-[20vh]" ref="formRef" :model="formValue" label-placement="left" :rules="rules" :label-width="70">
+				<NFormItem label="新密码" path="password">
+					<NInput v-model:value="formValue.password" placeholder="请输入密码"></NInput>
+				</NFormItem>
+				<NFormItem>
+					<n-button type="primary" block @click="submitForm">提交</n-button>
+				</NFormItem>
+			</NForm>
+		</div> -->
 		<div v-if="userStore.userInfo?.role === UserRole.admin">
 			<div class="flex justify-between items-center mb-4">
 				<h2 class="text-fontSizeMedium font-bold">用户管理</h2>

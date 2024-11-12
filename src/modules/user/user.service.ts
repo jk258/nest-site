@@ -1,5 +1,5 @@
 import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common'
-import { CreateUserDto, ResUserDto, UpdateUserDto } from './dto/user.dto'
+import { CreateUserDto, ResUserDto, UpdateUserDto, UserInfoDto } from './dto/user.dto'
 import { UserRole } from '@/types/enmus'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -107,5 +107,18 @@ export class UserService {
 		} catch (error) {
 			throw new BadRequestException(error)
 		}
-	}
+  }
+  
+  async updateInfo(user: ResUserDto, userDto: UserInfoDto) {
+    try {
+      return await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          password: userDto.password
+        }
+      })
+    }catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
 }

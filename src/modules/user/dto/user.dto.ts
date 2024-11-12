@@ -1,5 +1,5 @@
-import { ApiProperty, OmitType, PickType } from "@nestjs/swagger"
-import { IsEmail, IsNotEmpty } from "class-validator"
+import { ApiProperty, OmitType, PickType } from '@nestjs/swagger'
+import { IsEmail, IsNotEmpty } from 'class-validator'
 
 export class CreateUserDto {
 	@ApiProperty({ description: '用户名', example: '123@123.com' })
@@ -13,14 +13,12 @@ export class CreateUserDto {
 	role: number
 }
 export class UpdateUserDto extends CreateUserDto {
-  @ApiProperty({ description: '用户id', example: '1' })
-  @IsNotEmpty({message: '用户id不能为空'})
-  id: number
+	@ApiProperty({ description: '用户id', example: '1' })
+	@IsNotEmpty({ message: '用户id不能为空' })
+	id: number
 }
 
-export class IdDto extends PickType(UpdateUserDto, ['id']) {
-  
-}
-export class ResUserDto extends OmitType(UpdateUserDto,['password']) {
-  
-}
+export class IdDto extends PickType(UpdateUserDto, ['id']) {}
+export class ResUserDto extends OmitType(UpdateUserDto, ['password']) {}
+
+export class UserInfoDto extends PickType(CreateUserDto, ['password']) {}
