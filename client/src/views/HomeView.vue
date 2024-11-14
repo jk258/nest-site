@@ -57,9 +57,11 @@ function getList() {
 			return
 		}
 	}
-	const data: SiteSearchType = {
+	const data: SiteSearchType = { 
 		tagId: tag.value?.id || 0,
-		title: searchValue.value.startsWith('#') ? '' : searchValue.value,
+    title: searchValue.value.startsWith('#') ? '' : searchValue.value,
+    page: 1,
+    pageIndex: 100,
 	}
 	GetSiteList(data).then((res) => {
 		siteList.value = res.data

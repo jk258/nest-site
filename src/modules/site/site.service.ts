@@ -49,7 +49,7 @@ export class SiteService {
 		}
 	}
 
-	async findAll(siteSearch: SiteSearchDto) {
+  async findAll(siteSearch: SiteSearchDto) {
 		try {
 			const whereData: {
 				title?: { contains: string }
@@ -71,8 +71,10 @@ export class SiteService {
 					},
 				}
 			}
-
-			const siteList = await this.prisma.site.findMany({
+      const page = siteSearch.page - 1>=0?siteSearch.page-1:0
+      const siteList = await this.prisma.site.findMany({
+				skip: page * siteSearch.pageIndex,
+				take: siteSearch.pageIndex,
 				where: whereData,
 				include: {
 					tags: {

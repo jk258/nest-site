@@ -1,6 +1,6 @@
 import { UpdateTagDto } from "@/modules/tag/dto/tag.dto"
 import { ApiProperty, OmitType, PickType } from "@nestjs/swagger"
-import { IsNotEmpty, IsNumber, IsUrl } from "class-validator"
+import { IsNotEmpty, isNumber, IsNumber, IsUrl } from "class-validator"
 
 export class CreateSiteDto {
 	@ApiProperty({ description: '网站标题', example: '百度' })
@@ -41,7 +41,13 @@ export class SiteUrl extends PickType(UpdateSiteDto, ['url']) {
 	
 }
 
-export class SiteSearchDto{
-  title:string
-  tagId: number
+export class SiteSearchDto {
+	@ApiProperty({ description: '网站标题', example: '百度' })
+	title: string
+  @ApiProperty({ description: '标签id', example: '1' })
+	tagId: number
+	@IsNumber()
+	page: number
+	@IsNumber()
+	pageIndex: number
 }

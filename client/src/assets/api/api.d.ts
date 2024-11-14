@@ -28,5 +28,7 @@ export interface UserType{
 
 export interface SiteSearchType{
   title?:string
-  tagId?:number
+  tagId?: number
+  page: number
+  pageIndex:number
 }
