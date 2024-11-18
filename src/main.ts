@@ -1,9 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/modules/app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CustomValidationPipe } from '@/common/pipes/CustomValidationPipe.pipe';
 import { ValidationPipe } from '@nestjs/common';
-
+import helmet from 'helmet'
 
 function docs(app) {
   const options = new DocumentBuilder().setTitle('书签').setDescription('书签网站').setVersion('1.0').addTag('书签').build()
@@ -71,6 +70,7 @@ function docs(app) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(helmet())
   app.enableCors()
   
   app.setGlobalPrefix('api');
