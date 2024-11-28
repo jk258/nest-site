@@ -3,19 +3,22 @@ import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { NButton, NConfigProvider, NIcon, NText, dateZhCN, zhCN } from 'naive-ui'
 import { useUserStore } from '@/stores/user'
 import Logout from '@/components/icons/Logout.vue'
+import { UserRole } from '@/assets/utils/utils'
 
 const router = useRouter()
 const userStore = useUserStore()
 const goUserlist = () => {
-	router.push({
-		path: '/userlist',
-	})
+	if (userStore.userInfo?.role === UserRole.admin) {
+		router.push({
+			path: '/userlist',
+		})
+	}
 }
 const logout = () => {
-  userStore.setToken('')
-  router.replace({
-    path:'/'
-  })
+	userStore.setToken('')
+	router.replace({
+		path: '/',
+	})
 }
 </script>
 
@@ -33,6 +36,12 @@ const logout = () => {
 						:class="{ 'text-primaryColor': $route.path === '/sitedetail' }"
 						to="/sitedetail">
 						添加书签
+					</RouterLink>
+					<RouterLink
+						class="text-fontSizeMedium hover:text-primaryColorHover ml-5"
+						:class="{ 'text-primaryColor': $route.path === '/set' }"
+						to="/set">
+						设置
 					</RouterLink>
 					<RouterLink
 						v-if="!userStore.userInfo"
