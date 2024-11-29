@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { NButton, NConfigProvider, NIcon, NText, dateZhCN, zhCN } from 'naive-ui'
-import { useUserStore } from '@/stores/user'
+import { NButton, NConfigProvider, NIcon, darkTheme, dateZhCN, zhCN } from 'naive-ui'
+import { useThemeStore, useUserStore } from '@/stores'
 import Logout from '@/components/icons/Logout.vue'
 import { UserRole } from '@/assets/utils/utils'
 
 const router = useRouter()
 const userStore = useUserStore()
+const themeStore = useThemeStore()
 const goUserlist = () => {
 	if (userStore.userInfo?.role === UserRole.admin) {
 		router.push({
@@ -23,7 +24,7 @@ const logout = () => {
 </script>
 
 <template>
-	<n-config-provider :locale="zhCN" :date-locale="dateZhCN">
+	<n-config-provider :theme="themeStore.theme == 'dark' ? darkTheme : null" :locale="zhCN" :date-locale="dateZhCN">
 		<div class="w-[960px] m-auto">
 			<header class="h-20 flex justify-between items-center">
 				<router-link class="flex items-center" to="/" replace>
@@ -74,4 +75,17 @@ const logout = () => {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	:root {
+		--baseColor: #ffffff;
+		--primaryColor: #409eff;
+		--primaryColorHover: #36ad6a;
+		--textColor3: rgb(118, 124, 130);
+		--borderColor: rgb(224, 224, 230);
+	}
+	.dark {
+		--baseColor: #000;
+	}
+}
 </style>
