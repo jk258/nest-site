@@ -41,12 +41,16 @@ const rules: FormRules = {
 	},
 }
 const submitForm = () => {
-	const promise = props.detail ? UpdateUser({ ...formValue.value, id: detailId.value }) : CreateUser(formValue.value)
-	promise.then((res) => {
-		const discretes = useDiscrete()
-		discretes.message.success('提交成功')
-		showModal.value = false
-		emit('submitSucess')
+	formRef.value?.validate((errors) => {
+		if (!errors) {
+			const promise = props.detail ? UpdateUser({ ...formValue.value, id: detailId.value }) : CreateUser(formValue.value)
+			promise.then((res) => {
+				const discretes = useDiscrete()
+				discretes.message.success('提交成功')
+				showModal.value = false
+				emit('submitSucess')
+			})
+		}
 	})
 }
 </script>

@@ -11,7 +11,7 @@ export default {
 		},
 		colors: {
 			baseColor: 'var(--baseColor)',
-			primaryColor: 'var(--primaryColor',
+			primaryColor: 'var(--primaryColor)',
 			primaryColorHover: 'var(--primaryColorHover)',
 			textColor3: 'var(--textColor3)',
 			borderColor: 'var(--borderColor)',

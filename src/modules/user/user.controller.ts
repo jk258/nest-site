@@ -103,7 +103,7 @@ export class UserController {
 		return await this.userService.remove(req.user, idDto.id)
 	}
 
-	@ApiOperation({ summary: '修改用户信息' })
+	@ApiOperation({ summary: '修改用户密码' })
 	@ApiHeader({
 		name: 'authorization',
 		description: '用户token',
@@ -117,7 +117,7 @@ export class UserController {
 	})
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(AuthGuard)
-	@Post('updateinfo')
+	@Post('updatePass')
 	async updateInfo(@Request() req, @Body() userDto: UserInfoDto) {
 		return await this.userService.updateInfo(req.user, userDto)
 	}

@@ -41,7 +41,7 @@ const submit = () => {
 					<NInput v-model:value="formValue.username" :input-props="{ name: 'bookmark-username', autocomplete: 'on' }" @keyup.enter.native="submit" placeholder="请输入邮箱"></NInput>
 				</NFormItem>
 				<NFormItem label="密码" path="password">
-					<NInput v-model:value="formValue.password" type="password" @keyup.enter.native="submit" placeholder="请输入密码"></NInput>
+					<NInput v-model:value="formValue.password" type="password" showPasswordOn="click" @keyup.enter.native="submit" placeholder="请输入密码"></NInput>
 				</NFormItem>
 				<NFormItem>
 					<NButton type="primary" block @click="submit">提交</NButton>
