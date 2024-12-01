@@ -7,13 +7,14 @@ export interface TagType{
 }
 
 
-export interface SiteType{
-  id: number
-  title: string
-  url: string
-  logo: string
-  desc?:string
-  tags: string
+export interface SiteType {
+	id: number
+	title: string
+	url: string
+	logo: string
+	desc?: string
+	tags: string
+	createdAt?: string
 }
 export interface SiteListType extends SiteType {
 	tags: TagType[]

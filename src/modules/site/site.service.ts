@@ -49,7 +49,7 @@ export class SiteService {
 		}
 	}
 
-  async findAll(siteSearch: SiteSearchDto) {
+	async findAll(siteSearch: SiteSearchDto) {
 		try {
 			const whereData: {
 				title?: { contains: string }
@@ -71,8 +71,8 @@ export class SiteService {
 					},
 				}
 			}
-      const page = siteSearch.page - 1>=0?siteSearch.page-1:0
-      const siteList = await this.prisma.site.findMany({
+			const page = siteSearch.page - 1 >= 0 ? siteSearch.page - 1 : 0
+			const siteList = await this.prisma.site.findMany({
 				skip: page * siteSearch.pageIndex,
 				take: siteSearch.pageIndex,
 				where: whereData,
@@ -122,6 +122,7 @@ export class SiteService {
 			})
 			return {
 				...site,
+				logo: site.logo ? this.config.get<string>('SITE_DOMAIN') + site.logo : site.logo,
 				tags: site.tags.map((tag) => tag.tag),
 			}
 		} catch (error) {
@@ -194,7 +195,6 @@ export class SiteService {
 		const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
 		return urlRegex.test(str)
 	}
-
 	async getSiteInfo(url: string) {
 		try {
 			const res = await this.httpService.axiosRef.get(url, {
@@ -214,6 +214,9 @@ export class SiteService {
 					responseType: 'arraybuffer',
 				})
 				const buffer = Buffer.from(resLogo.data)
+        const logoBase64 = buffer.toString('base64')
+				// const typeObj = await fileType.fileTypeFromBuffer(buffer)
+				// logo = `data:${typeObj?.mime};base64,${logoBase64}`
 				const logoPaths = logo.split('/')
 				const logoName = String(+new Date()) + '-' + String(Math.random()).split('.')[1] + '-' + logoPaths[logoPaths.length - 1]
 				writeFileSync(join(__dirname, '../../../static/upload/' + logoName), buffer)
@@ -222,7 +225,7 @@ export class SiteService {
 
 			return { title, desc, logo }
 		} catch (error) {
-			throw new BadRequestException(error)
+			return { title: '', desc: '', logo: '' }
 		}
 	}
 }

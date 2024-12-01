@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { NForm, NFormItem, NInput, NSelect, NButton } from 'naive-ui'
+import { NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
 import { ref } from 'vue'
 import { GetSiteDetail, GetSiteInfo, SiteCreate, SiteUpdate } from '@/assets/api'
 import TagSelect from '@/components/tagSelect/TagSelect.vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { SiteType, SiteListType } from '@/assets/api/api'
+import { Add } from '@/components/icons'
+
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id as string
@@ -98,9 +100,15 @@ getDetail()
 				<NFormItem label="标题" path="title">
 					<NInput v-model:value="formValue.title" placeholder="请输入标题"></NInput>
 				</NFormItem>
-				<!-- <NFormItem label="logo" path="logo">
-					<NInput v-model:value="formValue.logo" placeholder="请输入logo"></NInput>
-				</NFormItem> -->
+				<NFormItem label="logo" path="logo">
+					<img class="w-8 h-8" v-if="formValue.logo" :src="formValue.logo" alt="logo">
+          <img class="w-8 h-8 ml-3" src="@/assets/images/site-logo.svg" alt="">
+          <NButton text type="primary" class="ml-3">
+            <NIcon size="32">
+              <Add></Add>
+            </NIcon>
+          </NButton>
+				</NFormItem>
 				<NFormItem label="简介" path="desc">
 					<NInput v-model:value="formValue.desc" placeholder="请输入简介"></NInput>
 				</NFormItem>

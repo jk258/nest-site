@@ -4,6 +4,7 @@ import type { SiteListType, TagType } from '@/assets/api/api'
 import { NButton, NTag, NText } from 'naive-ui'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import {useDateFormat } from '@vueuse/core'
 const router = useRouter()
 const props=defineProps<{
   item: SiteListType,
@@ -50,7 +51,7 @@ const searchTag = (tagItem: TagType) => {
 		</div>
 		<p class="text-fontSizeSmall text-textColor3 line-clamp-1">{{ item.desc }}</p>
 		<div class="flex items-center gap-3">
-			<span class="text-textColor3 leading-6">2021-04-05</span>
+			<span class="text-textColor3 leading-6">{{ useDateFormat(new Date(item.createdAt!), 'YYYY-MM-DD HH:mm:ss') }}</span>
 			<div class="flex items-center gap-2" v-if="isEdit">
 				<NButton @click.prevent="editSite(item)" text type="primary">编辑</NButton>
 				<NButton @click.prevent="removeSite(item)" text type="error">删除</NButton>
