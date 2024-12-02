@@ -12,6 +12,7 @@ import { AuthModule } from '@/modules/auth/auth.module'
 import { TagModule } from '@/modules/tag/tag.module'
 import { SiteModule } from '@/modules/site/site.module'
 import { UserModule } from '@/modules/user/user.module'
+import { UploadModule } from '@/modules/upload/upload.module'
 import { JwtModule } from '@nestjs/jwt'
 import { LoggerMiddleware } from '@/common/middlewares/logger.middlerware'
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor'
@@ -68,6 +69,7 @@ import { HttpExceptionsFilter } from '@/common/filters/http-exception.filter'
 		TagModule,
 		SiteModule,
 		UserModule,
+		UploadModule,
 	],
 	controllers: [AppController],
 	providers: [
