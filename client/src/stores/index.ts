@@ -1,2 +1,2 @@
-export { useThemeStore } from './theme.ts'
-export { useUserStore } from './user.ts'
+export { useThemeStore } from './theme'
+export { useUserStore } from './user'
