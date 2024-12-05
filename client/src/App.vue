@@ -1,17 +1,27 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { NButton, NConfigProvider, NIcon, darkTheme, NGlobalStyle, dateZhCN, zhCN, NMessageProvider } from 'naive-ui'
 import { useThemeStore, useUserStore } from '@/stores'
 import Logout from '@/components/icons/Logout.vue'
 import { UserRole } from '@/assets/utils/utils'
+import { Moon, Sun } from '@/components/icons'
+import ChangePass from '@/views/set/components/ChangePass.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const themeStore = useThemeStore()
+/**
+ * 切换主题
+ */
+const updateTheme = () => {
+	themeStore.setTheme(themeStore.theme == 'light' ? 'dark' : 'light')
+}
+const isShowChangePass = ref(false) // 是否显示修改密码
 
 const navList = [
 	{ path: '/sitedetail', name: '添加书签' },
-	{ path: '/set', name: '设置' },
+	// { path: '/set', name: '设置' },
 ]
 /**用户详情 */
 const goUserlist = () => {
@@ -40,6 +50,10 @@ const logout = () => {
 						<span class="text-fontSizeLarge text-primaryColor ml-2">书签</span>
 					</router-link>
 					<nav class="flex justify-between items-center px-4 h-full">
+						<NIcon size="24" @click="updateTheme" text class="mr-5 cursor-pointer">
+							<Moon v-if="themeStore.theme == 'dark'"></Moon>
+							<Sun v-if="themeStore.theme == 'light'"></Sun>
+						</NIcon>
 						<RouterLink
 							v-for="(item, index) in navList"
 							:key="item.path"
@@ -55,19 +69,22 @@ const logout = () => {
 							to="/login">
 							登录
 						</RouterLink>
-						<template v-if="userStore.userInfo">
-							<span
+						<div class="flex items-center" v-if="userStore.userInfo">
+							<div @click="isShowChangePass = true" class="cursor-pointer text-fontSizeMedium hover:text-primaryColorHover mr-5">修改密码</div>
+							<ChangePass v-model:show-modal="isShowChangePass"></ChangePass>
+							<div
 								@click="goUserlist"
-								class="text-fontSizeMedium font-bold hover:text-primaryColorHover flex items-center"
+								class="text-fontSize leading-4 font-bold hover:text-primaryColorHover flex items-center"
 								:class="{ 'text-primaryColor': $route.path === '/login', 'cursor-pointer': userStore.userInfo.role == 0 }">
 								{{ userStore.userInfo.username }}
-							</span>
+							</div>
+							<!-- <div class="cursor-pointer text-primaryColor text-fontSizeMini leading-3">修改密码</div> -->
 							<NButton @click="logout" text type="error">
 								<NIcon size="20" class="ml-3">
 									<Logout></Logout>
 								</NIcon>
 							</NButton>
-						</template>
+						</div>
 					</nav>
 				</header>
 				<RouterView class="h-[calc(100vh-96px)]" />
