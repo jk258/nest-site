@@ -3,7 +3,7 @@ import { useDiscrete } from '@/assets/utils/hooks'
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
 
-const baseUrl = import.meta.env.MODE == 'development' ? 'http://localhost:3000' : ''
+const baseUrl = import.meta.env.MODE == 'development' ? import.meta.env.VITE_BASE_URL : ''
 
 const request = axios.create({
 	baseURL: baseUrl + '/api',

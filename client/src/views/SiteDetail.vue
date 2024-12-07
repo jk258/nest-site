@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
-import type { FormInst, FormRules } from 'naive-ui'
+import { NForm, NFormItem, NInput, NUpload, NButton, NIcon } from 'naive-ui'
+import type { FormInst, FormRules, UploadFileInfo } from 'naive-ui'
 import { ref } from 'vue'
 import { GetSiteDetail, GetSiteInfo, SiteCreate, SiteUpdate } from '@/assets/api'
 import TagSelect from '@/components/tagSelect/TagSelect.vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { SiteType, SiteListType } from '@/assets/api/api'
 import { Add } from '@/components/icons'
+import request from '@/assets/utils/request'
 
+const uploadUrl = import.meta.env.MODE == 'development' ? import.meta.env.VITE_BASE_URL : ''
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id as string
-const siteId = ref(id?Number(id):0)
+const siteId = ref(id ? Number(id) : 0)
 //#region 创建修改
 const formValue = ref<Omit<SiteType, 'id' | 'tags'> & { tags: number[] }>({
 	title: '',
@@ -54,6 +56,17 @@ const submit = () => {
 	})
 }
 //#endregion
+
+const handleUploadFinish = (e:Event) => {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    request.post('/upload/image', formData).then(res => {
+      formValue.value.logo = res.data
+    })
+  }
+}
 function isValidUrl(str: string) {
 	const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
 	return urlRegex.test(str)
@@ -72,6 +85,7 @@ const getSiteInfo = (value: string) => {
 		})
 	}
 }
+/**获取详情 */
 function getDetail() {
 	if (siteId.value) {
 		GetSiteDetail({ id: Number(siteId.value) }).then((res) => {
@@ -101,13 +115,14 @@ getDetail()
 					<NInput v-model:value="formValue.title" placeholder="请输入标题"></NInput>
 				</NFormItem>
 				<NFormItem label="logo" path="logo">
-					<img class="w-8 h-8" v-if="formValue.logo" :src="formValue.logo" alt="logo">
-          <img class="w-8 h-8 ml-3" src="@/assets/images/site-logo.svg" alt="">
-          <NButton text type="primary" class="ml-3">
-            <NIcon size="32">
-              <Add></Add>
-            </NIcon>
-          </NButton>
+          <img class="w-8 h-8 mr-3" v-if="!formValue.logo" src="@/assets/images/site-logo.svg" alt="" />
+					<img class="w-8 h-8 mr-3" v-if="formValue.logo" :src="formValue.logo" alt="logo" />
+					<NButton text type="primary" class="ml-3">
+						<input @change="handleUploadFinish" id="uploadfile" type="file" accept="image/*" class="cursor-pointer opacity-0 absolute z-10 w-full h-full top-0 left-0"/>
+						<NIcon size="32">
+							<Add></Add>
+						</NIcon>
+					</NButton>
 				</NFormItem>
 				<NFormItem label="简介" path="desc">
 					<NInput v-model:value="formValue.desc" placeholder="请输入简介"></NInput>
