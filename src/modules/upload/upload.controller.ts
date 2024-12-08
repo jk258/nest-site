@@ -18,7 +18,7 @@ import { UploadService } from './upload.service'
 import { CreateUploadDto } from './dto/create-upload.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Public } from '@/common/decorators/index.decorator'
-import { ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('上传')
 @Controller('upload')
@@ -26,10 +26,14 @@ export class UploadController {
 	constructor(private readonly uploadService: UploadService) {}
 
 	@ApiOperation({ summary: '上传图片' })
+	@ApiConsumes('multipart/form-data')
 	@ApiResponse({
 		status: 200,
 		type: String,
 		description: '网站信息',
+	})
+	@ApiBody({
+		type: CreateUploadDto,
 	})
 	@Post('image')
 	@HttpCode(HttpStatus.OK)
