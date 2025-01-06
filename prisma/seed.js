@@ -2,7 +2,11 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 async function main() {
-	const tag = await prisma.user.create({
+  const userList = await prisma.user.findMany()
+  if (userList.length > 0) {
+		return
+	}
+	const user = await prisma.user.create({
 		data: {
 			username: 'admin',
 			password: '123456',
